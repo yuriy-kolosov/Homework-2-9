@@ -10,7 +10,11 @@ import java.util.*;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     //                                                      Домашнее задание 2-9. Stream API и Optional
-    Map<String, Employee> employeeBook = new HashMap<>();
+    Map<String, Employee> employeeBook;
+
+    public EmployeeServiceImpl() {
+        this.employeeBook = new HashMap<>();
+    }
 
     public String addEmployee(String firstName, String lastName, int salary, String departmentId) {
 
@@ -50,46 +54,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(s -> "Найден: " + s)
                 .findFirst();
 
-        return employeeDetected.orElseThrow();
-
-    }
-
-    public String findAllEmployeesFromDepartment(String departmentId) {
-
-        return employeeBook.values().stream()
-                .filter(p -> (p.getDepartmentId().equals(departmentId)))
-                .toList()
-                .toString();
+        return employeeDetected.orElseThrow(() -> new EmployeeNotFoundException());
 
     }
 
     @Override
-    public String findAllEmployeesFromAllDepartments() {
-
-        return employeeBook.values().stream()
-                .toList()
-                .toString();
-
-    }
-
-    public String findEmployeeWithMinSalary(String departmentId) {
-
-        final Optional<Employee> employeeDetected = employeeBook.values().stream()
-                .filter(p -> (p.getDepartmentId().equals(departmentId)))
-                .min(Comparator.comparingInt(e -> e.getSalary()));
-
-        return employeeDetected.orElseThrow().toString();
-
-    }
-
-    public String findEmployeeWithMaxSalary(String departmentId) {
-
-        final Optional<Employee> employeeDetected = employeeBook.values().stream()
-                .filter(p -> (p.getDepartmentId().equals(departmentId)))
-                .max(Comparator.comparingInt(e -> e.getSalary()));
-
-        return employeeDetected.orElseThrow().toString();
-
+    public Collection<Employee> findAll() {
+        return Collections.unmodifiableCollection(employeeBook.values());
     }
 
 }
