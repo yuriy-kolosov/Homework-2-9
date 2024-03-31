@@ -1,10 +1,14 @@
 package pro.sky.homework29.service;
 
 import org.springframework.stereotype.Service;
+import pro.sky.homework29.exception.EmployeeNotFoundException;
 import pro.sky.homework29.model.Employee;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -15,41 +19,38 @@ public class DepartmentServiceImpl implements DepartmentService {
         this.employeeService = employeeService;
     }
 
-    public String findAllEmployeesFromDepartment(String departmentId) {
+    public Collection<Employee> findAllEmployeesFromDepartment(String departmentId) {
 
         return employeeService.findAll().stream()
                 .filter(p -> (p.getDepartmentId().equals(departmentId)))
-                .toList()
-                .toString();
+                .collect(toList());
 
     }
 
     @Override
-    public String findAllEmployeesFromAllDepartments() {
+    public Collection<Employee> findAllEmployeesFromAllDepartments() {
 
-        return employeeService.findAll().stream()
-                .toList()
-                .toString();
+        return employeeService.findAll();
 
     }
 
-    public String findEmployeeWithMinSalary(String departmentId) {
+    public Employee findEmployeeWithMinSalary(String departmentId) {
 
         final Optional<Employee> employeeDetected = employeeService.findAll().stream()
                 .filter(p -> (p.getDepartmentId().equals(departmentId)))
                 .min(Comparator.comparingInt(e -> e.getSalary()));
 
-        return employeeDetected.orElseThrow().toString();
+        return employeeDetected.orElseThrow(() -> new EmployeeNotFoundException());
 
     }
 
-    public String findEmployeeWithMaxSalary(String departmentId) {
+    public Employee findEmployeeWithMaxSalary(String departmentId) {
 
         final Optional<Employee> employeeDetected = employeeService.findAll().stream()
                 .filter(p -> (p.getDepartmentId().equals(departmentId)))
                 .max(Comparator.comparingInt(e -> e.getSalary()));
 
-        return employeeDetected.orElseThrow().toString();
+        return employeeDetected.orElseThrow(() -> new EmployeeNotFoundException());
 
     }
 

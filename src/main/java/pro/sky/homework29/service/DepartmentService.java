@@ -1,13 +1,17 @@
 package pro.sky.homework29.service;
 
+import pro.sky.homework29.model.Employee;
+
+import java.util.Collection;
+
 public interface DepartmentService {
 
-    String findAllEmployeesFromAllDepartments();
+    Collection<Employee> findAllEmployeesFromAllDepartments();
 
-    String findAllEmployeesFromDepartment(String departmentId);
+    Collection<Employee> findAllEmployeesFromDepartment(String departmentId);
 
-    String findEmployeeWithMinSalary(String departmentId);
+    Employee findEmployeeWithMinSalary(String departmentId);
 
-    String findEmployeeWithMaxSalary(String departmentId);
+    Employee findEmployeeWithMaxSalary(String departmentId);
 
 }
